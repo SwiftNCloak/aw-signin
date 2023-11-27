@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact = $_POST['txtContact'];
     $username = $_POST['txtUname'];
     $password = md5($_POST['txtUpass']);
+    $userType = $_POST['userType'] ?? '';
 
     $checkUsernameQuery = "SELECT * FROM users WHERE user_name='$username'";
     $checkUsernameResult = $conn->query($checkUsernameQuery);
@@ -17,17 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($checkUsernameResult->num_rows > 0) {
         $disp = 'Username already exists.';
     } else {
-        $insertQuery = "INSERT INTO users (user_name, user_pass, user_type, name, email, contact) VALUES ('$username', '$password', 2, '$name', '$email', '$contact')";
+        $insertQuery = "INSERT INTO users (user_name, user_pass, user_type, name, email, contact) VALUES ('$username', '$password', '$userType', '$name', '$email', '$contact')";
 
         if ($conn->query($insertQuery) === TRUE) {
             $disp = 'Registration success! You can now log in.';
         } else {
-            $disp = 'Error during registration: ' . $conn->error;
+            $disp = 'Registration Error: ' . $conn->error;
         }
     }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -50,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" required="true" name="txtUname" placeholder="Enter Username"/> <br/>
             <label>PASSWORD</label><br/>
             <input type="password" required="true" name="txtUpass" placeholder="Enter Password"/> <br/><br/>
+            <select name="userType">
+                <option value="1">Staff</option>
+                <option value="2">Guest</option>
+            </select><br/><br/>
             <input type="submit" name="btnSignup" value="Sign Up"/><br/>
             <?php echo $disp; ?>
         </form>

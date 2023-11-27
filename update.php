@@ -1,5 +1,6 @@
 <?php
     include('config.php');
+    $disp = '';
 
     if (isset($_POST['token'])) {
         $id = $_POST['token'];
